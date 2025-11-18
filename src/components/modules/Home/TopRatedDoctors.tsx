@@ -4,9 +4,6 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import cardioDoc from '../../../assets/images/doctor-cardiologist.jpg';
 import neurolDoc from '../../../assets/images/doctor-neurologist.jpg';
-import orthoDoc from '../../../assets/images/doctor-orthopedic.jpg';
-import orthoDoc from '../../../assets/images/doctor-orthopedic.jpg';
-import orthoDoc from '../../../assets/images/doctor-orthopedic.jpg';
 
 const doctors = [
   {
