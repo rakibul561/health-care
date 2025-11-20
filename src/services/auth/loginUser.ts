@@ -48,6 +48,6 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
 
     } catch (error) {
         console.log(error);
-        return { error: "Login failed" };
+        return { error: "Login is failed" };
     }
 }
