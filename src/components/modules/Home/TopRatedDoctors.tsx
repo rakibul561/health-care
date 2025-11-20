@@ -2,8 +2,9 @@ import { Star } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import cardioDoc from '../../../assets/images/doctor-cardiologist.jpg';
-import neurolDoc from '../../../assets/images/doctor-neurologist.jpg';
+import cardioDoc from '../../../assets/iamge/doctor-cardiologist.jpg';
+import neurolDoc from '../../../assets/iamge/doctor-neurologist.jpg';
+import orthoDoc from '../../../assets/iamge/doctor-orthopedic.jpg';
 
 const doctors = [
   {

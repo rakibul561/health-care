@@ -1,7 +1,7 @@
 import { Star, Quote } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
-import samplePhoto from '../../../assets/images/hero-doctor.jpg';
+import samplePhoto from '../../../assets/iamge/hero-doctor.jpg';
 
 const testimonials = [
   {

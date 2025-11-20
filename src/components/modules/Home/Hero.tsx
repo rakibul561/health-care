@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { HeroProps } from "@/types/heroProps";
-import { LargeSparkleIcon, SparkleIcon } from "../../../../public/assets/icon/SparkleIcon";
+import { LargeSparkleIcon, SparkleIcon } from "../../../assets/icon/SparkleIcon";
 
 
 
