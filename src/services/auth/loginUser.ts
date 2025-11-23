@@ -2,6 +2,7 @@
 "use server"
 
 import z from "zod";
+import {parse} from "cookie";
 
 const loginValidationZodSchema = z.object({
     email: z.email({
@@ -40,8 +41,41 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
             body: JSON.stringify(loginData),
             headers: {
                 "Content-Type": "application/json",
-            },
-        }).then(res => res.json());
+            }, 
+        })
+
+        const setcookie = res.headers.getSetCookie()
+
+        if (setcookie && setcookie.length > 0) {
+            setcookie.forEach((cookie) => {
+                
+                console.log("Parsed Cookie:", cookie);
+                const parsedCookie = parse(cookie);
+                console.log("Parsed Cookie Object:", parsedCookie);
+            })
+        } else {
+            throw new Error("No Set-Cookie header found");
+        }
+        
+
+
+
+
+
+
+
+
+
+
+
+        console.log("Set-Cookie Header:", setcookie);
+       
+        const result = await res.json();
+ 
+        console.log({
+            res,
+            result
+        })
 
 
         return res;
