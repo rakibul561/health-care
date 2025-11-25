@@ -7,13 +7,13 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "./field";
 import { Input } from "./input";
 import { loginUser } from "@/services/auth/loginUser";
 
-const LoginForm = () => {
+const LoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
 
   const getFieldError = (fieldName: string) => {
     if (state && state.errors) {
       const error = state.errors.find((err: any) => err.field === fieldName);
-      return error.message;
+      return error?.message ?? null;
     } else {
       return null;
     }
@@ -21,6 +21,7 @@ const LoginForm = () => {
   console.log(state);
   return (
     <form action={formAction}>
+      {redirect && <input type="hidden" name="redirect" value={redirect} />}
       <FieldGroup>
         <div className="grid grid-cols-1 gap-4">
           {/* Email */}
