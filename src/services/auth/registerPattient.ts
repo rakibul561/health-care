@@ -9,15 +9,15 @@ const registerValidationZodSchema = z.object({
     address: z.string().optional(),
     email: z.email({ message: "Valid email is required" }),
     password: z.string().min(6, {
-        message: "Password is required and must be at least 6 characters long",
+        error: "Password is required and must be at least 6 characters long",
     }).max(100, {
-        message: "Password must be at most 100 characters long",
+        error: "Password must be at most 100 characters long",
     }),
     confirmPassword: z.string().min(6, {
-        message: "Confirm Password is required and must be at least 6 characters long",
+        error: "Confirm Password is required and must be at least 6 characters long",
     }),
 }).refine((data: any) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    error: "Passwords do not match",
     path: ["confirmPassword"],
 });
 
@@ -45,7 +45,8 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
                         field: issue.path[0],
                         message: issue.message,
                     }
-                })
+                }
+                )
             }
         }
 
@@ -59,6 +60,7 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
         }
 
         const newFormData = new FormData();
+
         newFormData.append("data", JSON.stringify(registerData));
 
         const res = await fetch("http://localhost:5000/api/v1/user/create-patient", {
@@ -67,24 +69,23 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
         })
 
         const result = await res.json();
-        
-        if(result.success){
-            // loginUser call করলে এটা redirect করবে
+
+        console.log(res, "res");
+
+        if (result.success) {
             await loginUser(_currentState, formData);
         }
 
         return result;
 
+
+
     } catch (error: any) {
-        // Next.js redirect error handle করুন
-        if (error?.digest?.includes('NEXT_REDIRECT')) {
-            throw error; // redirect হতে দিন
+        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+        if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw error;
         }
-        
         console.log(error);
-        return { 
-            success: false,
-            error: "Registration failed" 
-        };
+        return { success: false, message: `${process.env.NODE_ENV === 'development' ? error.message : "Registration Failed. Please try again."}` };
     }
 }
