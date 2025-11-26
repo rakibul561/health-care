@@ -53,6 +53,7 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
 
         const result = await res.json();
 
+
         // প্রথমে check করুন login success হয়েছে কিনা
         if(!result.success){
             return { 
@@ -112,7 +113,7 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
 
         const userRole: UserRole = verifiedToken.role;
         
-        // Redirect logic - এটা সবার শেষে
+        
         if (redirectTo) {
             const requestedPath = redirectTo.toString();
             if (isValidRedirectForRole(requestedPath, userRole)) {
@@ -121,19 +122,16 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
                 redirect(getDefaultDashboardRoute(userRole));
             }
         } else {
-            // যদি কোনো redirect path না থাকে, তাহলে default dashboard এ পাঠান
+            
             redirect(getDefaultDashboardRoute(userRole));
         }
 
-    } catch (error: any) {
-        // NEXT_REDIRECT error গুলো re-throw করতে হবে
+    }  catch (error: any) {
+        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
         if (error?.digest?.startsWith('NEXT_REDIRECT')) {
             throw error;
         }
         console.log(error);
-        return { 
-            success: false,
-            error: "Login failed" 
-        };
+        return { error: "Login failed" };
     }
 }

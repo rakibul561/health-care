@@ -2,21 +2,22 @@
 "use server"
 
 import z from "zod";
+import { loginUser } from "./loginUser";
 
 const registerValidationZodSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
     address: z.string().optional(),
     email: z.email({ message: "Valid email is required" }),
     password: z.string().min(6, {
-        error: "Password is required and must be at least 6 characters long",
+        message: "Password is required and must be at least 6 characters long",
     }).max(100, {
-        error: "Password must be at most 100 characters long",
+        message: "Password must be at most 100 characters long",
     }),
     confirmPassword: z.string().min(6, {
-        error: "Confirm Password is required and must be at least 6 characters long",
+        message: "Confirm Password is required and must be at least 6 characters long",
     }),
 }).refine((data: any) => data.password === data.confirmPassword, {
-    error: "Passwords do not match",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
 });
 
@@ -44,8 +45,7 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
                         field: issue.path[0],
                         message: issue.message,
                     }
-                }
-                )
+                })
             }
         }
 
@@ -59,22 +59,32 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
         }
 
         const newFormData = new FormData();
-
         newFormData.append("data", JSON.stringify(registerData));
 
         const res = await fetch("http://localhost:5000/api/v1/user/create-patient", {
             method: "POST",
             body: newFormData,
-        }).then(res => res.json());
+        })
 
-        console.log(res, "res");
+        const result = await res.json();
+        
+        if(result.success){
+            // loginUser call করলে এটা redirect করবে
+            await loginUser(_currentState, formData);
+        }
 
-        return res;
+        return result;
 
-
-
-    } catch (error) {
+    } catch (error: any) {
+        // Next.js redirect error handle করুন
+        if (error?.digest?.includes('NEXT_REDIRECT')) {
+            throw error; // redirect হতে দিন
+        }
+        
         console.log(error);
-        return { error: "Registration failed" };
+        return { 
+            success: false,
+            error: "Registration failed" 
+        };
     }
 }
